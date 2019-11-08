@@ -25,49 +25,66 @@ const text = (() => {
 
   // event handler fyrir það að klára færslu
   const checked = document.querySelectorAll('.item__checkbox');
-  /*const x = checked[0];
-  const y = checked[1];
-  const z = checked[2];
-  */
+  const li = document.querySelectorAll('li')
 
-  function finish() {
-    const li = document.querySelectorAll('li');
-    for (const element of li) {
-      element.classList.toggle('item--done');
-    }
+  function finish(e) {
+    e.target.parentNode;
   }
-
-  /*const first = li[0];
-    const second = li[1];
-    const third = li[2];
-
-    first.classList.toggle('item--done');
-    second.classList.toggle('item--done');
-    third.classList.toggle('item--done');
-  }
-  x.addEventListener('click', finish);
-  y.addEventListener('click', finish);
-  z.addEventListener('click', finish);
-  */
   for (const element of checked) {
-    element.addEventListener('click', finish);
+    element.addEventListener('check', finish);
   }
-
+  for (const element of li) {
+    element.classList.toggle('item--done');
+  }
 
   // event handler fyrir það að breyta færslu
-  function edit(e) {}
 
-  /*/ Búum til 'items', HTML collection of "item__text" eindum
-  items = document.getElementsByClassName("item__text");
 
-  // Breytum HTML Collectioninu í fylki
-  items = Array.from(items);
+  // Búum til 'items', NodeListOf collection of "item__text" eindum
+  const spa = document.querySelectorAll(".item__text");
 
   // Lúppum í gegnum hvert stak í fylkinu og bætum onclick handler á það
   // sem kallar á edit þegar klikkað er
-  items.forEach(function (element) {
+  for (const element of spa) {
     element.addEventListener('click', edit);
-  });*/
+  };
+
+  function edit() {
+    var span, input, text;
+    // Get the event (handle MS difference)
+    event = event || window.event;
+
+    // Get the root element of the event (handle MS difference)
+    span = event.target || event.srcElement;
+
+    if (span && span.tagName.toUpperCase() === "SPAN") {
+      // Hide it 
+      span.style.display = "none";
+
+      // Get text 
+      text = span.innerHTML;
+
+      // Create an input
+      input = document.createElement("input");
+      input.type = "text";
+      input.value = text;
+      input.size = Math.max(text.length);
+      span.parentNode.insertBefore(input, span);
+
+      // Focus it, hook blur to undo 
+      input.focus();
+      input.onkeypress = function () {
+        // Remove the input
+        span.parentNode.removeChild(input);
+
+        // Update the span
+        span.innerHTML = input.value;
+
+        // Show the span again
+        span.style.display = "";
+      };
+    }
+  }
 
   /* var x = document.getElementsByClassName("item__text");
    var i;
@@ -127,26 +144,29 @@ const text = (() => {
     }*/
 
   // event handler fyrir það að klára að breyta færslu
-  function commit(e) {}
+  function commit(e) {
+
+  }
 
   // fall sem sér um að bæta við nýju item
 
   function add() {
-    const li = document.createElement('li');
-    li.setAttribute('class', 'item');
-    document.documentElement.lastChild.appendChild('li');
+    if (li === 'item--done') {
+      const lis = document.createElement('li');
+      lis.setAttribute('class', 'item');
+      document.documentElement.lastChild.appendChild('li');
+    }
   }
-
+  document.querySelector(".form__button").addEventListener("click", add);
 
   // event handler til að eyða færslu
   var remove = function () {
     this.parentNode.remove();
   };
 
-  const lis = document.querySelectorAll('li');
   const button = document.querySelectorAll('button');
 
-  for (var i = 0; i < lis.length; i++) {
+  for (var i = 0; i < li.length; i++) {
     button[i].addEventListener('click', remove, false);
   }
 
