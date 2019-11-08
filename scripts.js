@@ -27,16 +27,49 @@ const text = (() => {
   function finish(e) {}
 
   // event handler fyrir það að breyta færslu
-  document.getElementsByClassName("item__text").addEventListener("click", myFunction);
+  document.querySelector(".item__text").onclick = function () {
+    edit()
+  };
 
-  function myFunction() {
-    var x = document.getElementsByClassName("item__text");
-    var i;
-    for (i = 0; i < x.length; i++) {
-      x[i].style.backgroundColor = "red";
+  function edit() {
+
+    var span, input, text;
+    // Get the event (handle MS difference)
+    event = event || window.event;
+
+    // Get the root element of the event (handle MS difference)
+    span = event.target || event.srcElement;
+
+    if (span && span.tagName.toUpperCase() === "SPAN") {
+      // Hide it 
+      span.style.display = "none";
+
+      // Get text 
+      text = span.innerHTML;
+
+      // Create an input
+      input = document.createElement("input");
+      input.type = "text";
+      input.value = text;
+      input.size = "95.5";
+      span.parentNode.insertBefore(input, span);
+
+      // Focus it, hook blur to undo 
+      input.focus();
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+        // Remove the input
+        span.parentNode.removeChild(input);
+
+        // Update the span
+        span.innerHTML = input.value == "" ? "&nbsp;" : input.value;
+
+        // Show the span again
+        span.style.display = "";
+      };
     }
   }
-
   /*
   document.getElementsByClassName("item__text").addEventListener("click", edit); 
   function edit() {
